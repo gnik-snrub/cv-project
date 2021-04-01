@@ -1,0 +1,24 @@
+.experience-block {
+    display: flex;
+}
+
+.exp-remove-button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.exp-button-wrapper {
+    height: 50%;
+    width: max-content;
+}
+
+.exp-content {
+    flex: 9;
+}
+
+.information-group {
+    display: grid;
+    grid-template-columns: 50% 50%;
+}

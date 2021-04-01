@@ -1,0 +1,17 @@
+.general-info {
+    width: 100%;
+    display: grid;
+    grid-template-rows: 50% 50%;
+    grid-template-columns: 50% 50%;
+    grid-template-areas: 'name name' 'email phone';
+}
+
+.general-name {
+    grid-area: name;
+}
+.general-email {
+    grid-area: email;
+}
+.general-phone {
+    grid-area: phone;
+}

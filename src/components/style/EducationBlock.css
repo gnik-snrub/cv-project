@@ -1,0 +1,19 @@
+.education-block {
+    display: flex;
+}
+
+.remove-button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.edu-button-wrapper {
+    height: 50%;
+    width: max-content;
+}
+
+.edu-content {
+    flex: 9;
+}

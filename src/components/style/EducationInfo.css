@@ -1,0 +1,16 @@
+.education-info {
+    width: 100%;
+}
+
+.add-education-wrapper {
+    width: 100%;
+    height: max-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-education {
+    height: max-content;
+    width: max-content;
+}
