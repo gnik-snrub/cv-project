@@ -1,5 +1,6 @@
 .experience-block {
     display: flex;
+    margin-bottom: 15px;
 }
 
 .exp-remove-button {

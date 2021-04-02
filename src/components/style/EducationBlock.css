@@ -1,5 +1,6 @@
 .education-block {
     display: flex;
+    margin-bottom: 15px;
 }
 
 .remove-button {
