@@ -1,38 +1,31 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import './style/Field.css'
 
-class Field extends Component {
-    constructor(props) {
-        super(props)
-        this.sendData = this.sendData.bind(this)
+const Field = (props) => {
+    const { field, edit, val, placeholder, callback } = props
+    const sendData = (e) => {
+        callback(field, e.target.value)
     }
+    const label = field.charAt(0).toUpperCase() + field.slice(1) + ': '
 
-    sendData(e) {
-        this.props.callback(this.props.field, e.target.value)
-    }
-    
-    render() {
-        const { field, edit, placeholder, val } = this.props
-        const label = field.charAt(0).toUpperCase() + field.slice(1) + ': '
-        return (
-            <div className='field-container'>
-                <div className='label-container'>
-                    {label}
-                </div>
-                {edit
-                    ?   <input
-                            className='field-edit'
-                            type='text'
-                            placeholder={placeholder}
-                            value={val}
-                            onChange={(e) => this.sendData(e)}
-                        />
-                    :   <div className='field-preview'>{val}</div>
-                }
+    return (
+        <div className = 'field-container'>
+            <div className = 'label-container'>
+                { label }
             </div>
-        )
-    }
+            {edit
+            ?   <input
+                    className = 'field-edit'
+                    text = 'text'
+                    placeholder = { placeholder }
+                    value = { val }
+                    onChange = { (e) => sendData(e) }
+                />
+            :   <div className = 'field-preview'>{ val }</div>
+            }
+        </div>
+    )
 }
 
 Field.propTypes = {

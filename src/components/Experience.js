@@ -1,31 +1,22 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import Button from './Button'
 import ExperienceBlock from './ExperienceBlock'
 import './style/Experience.css'
 
-class Experience extends Component {
-    constructor(props) {
-        super(props)
-        this.addNewExperienceBlock = this.addNewExperienceBlock.bind(this)
-        this.removeExperienceBlock = this.removeExperienceBlock.bind(this)
-        this.updateExperienceData = this.updateExperienceData.bind(this)
-        this.state = {
-            experienceBlockIds: 1,
-            data: []
-        }
+const Experience = (props) => {
+    const { edit } = props
+    const [blockIDs, setBlockIDs] = useState(1)
+    const [data, setData] = useState([])
+
+    const newExperienceBlock = () => {
+        setBlockIDs(blockIDs + 1)
+        setData([...data, createEmptyExperienceData()])
     }
 
-    addNewExperienceBlock() {
-        this.setState({
-            experienceBlockIds: this.state.experienceBlockIds + 1,
-            data: [...this.state.data, this.createEmptyExperienceData()]
-        })
-    }
-
-    createEmptyExperienceData() {
+    const createEmptyExperienceData = () => {
         return {
-            id: this.state.experienceBlockIds,
+            id: blockIDs,
             title: '',
             company: '',
             tasks: '',
@@ -34,38 +25,32 @@ class Experience extends Component {
         }
     }
 
-    findDataIndex(newState, id) {
-        for (let i = 0; i < newState.length; i++) {
-            if (newState[i].id === id) {
+    const findDataIndex = (id) => {
+        for (let i = 0; i < data.length; i++) {
+            if (data[i].id === id) {
                 return i
             }
         }
     }
 
-    updateExperienceData(id, category, newData) {
-        const stateUpdate = this.state.data
-        const updateIndex = this.findDataIndex(stateUpdate, id)
-        stateUpdate[updateIndex] = {
-            ...stateUpdate[updateIndex],
-            [category]: newData
+    const updateExperienceData = (id, category, newInfo) => {
+        const updateIndex = findDataIndex(id)
+        const newData = [ ...data ]
+        newData[updateIndex] = {
+            ...newData[updateIndex],
+            [category]: newInfo
         }
-        this.setState({
-            data: stateUpdate
-        })
+        setData(newData)
     }
 
-    removeExperienceBlock(id) {
-        const stateUpdate = this.state.data
-        const removeIndex = this.findDataIndex(stateUpdate, id)
-        stateUpdate.splice(removeIndex, 1)
-        this.setState({
-            data: stateUpdate
-        })
+    const removeExperienceBlock = (id) => {
+        const removeIndex = findDataIndex(id)
+        const newData = [ ...data ]
+        newData.splice(removeIndex, 1)
+        setData(newData)
     }
 
-    render() {
-        const { edit } = this.props
-        const data = this.state.data
+    const collectDataAsElements = () => {
         let experience = []
         for (let i = 0; i < data.length; i++) {
             const { id, title, company, tasks, start, end } = data[i]
@@ -73,8 +58,8 @@ class Experience extends Component {
                 <ExperienceBlock
                     key = { i }
                     edit = { edit }
-                    delete = {this.removeExperienceBlock}
-                    update = {this.updateExperienceData}
+                    remove = {removeExperienceBlock}
+                    update = {updateExperienceData}
                     id = { id }
                     title = { title }
                     company = { company }
@@ -84,20 +69,21 @@ class Experience extends Component {
                 />
             )
         }
-
-        return( 
-			<div className = 'experience'>
-                {experience}
-                {edit && 
-                    <div className='add-experience-wrapper'>
-                        <div className='add-experience'>
-                            <Button task={this.addNewExperienceBlock} label='Add Experience' />
-                        </div>
-                    </div>
-                }
-            </div>
-        )
+        return experience
     }
+
+    return( 
+        <div className = 'experience'>
+            {collectDataAsElements()}
+            {edit && 
+                <div className='add-experience-wrapper'>
+                    <div className='add-experience'>
+                        <Button task={newExperienceBlock} label='Add Experience' />
+                    </div>
+                </div>
+            }
+        </div>
+    )
 }
 
 Experience.propTypes = {

@@ -1,69 +1,54 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import Button from './Button'
 import EducationBlock from './EducationBlock'
 import './style/EducationInfo.css'
 
-class EducationInfo extends Component {
-    constructor(props) {
-        super(props)
-        this.addNewEducationBlock = this.addNewEducationBlock.bind(this)
-        this.removeEducationBlock = this.removeEducationBlock.bind(this)
-        this.updateEducationData = this.updateEducationData.bind(this)
-        this.state = {
-            educationBlockIds: 1,
-            data: []
-        }
+const EducationInfo = (props) => {
+    const { edit } = props
+    const [blockIDs, setBlockIDs] = useState(1)
+    const [data, setData] = useState([])
+
+    const newEducationBlock = () => {
+        setBlockIDs(blockIDs + 1)
+        setData([...data, createEmptyEducationData()])
     }
 
-    addNewEducationBlock() {
-        this.setState({
-            educationBlockIds: this.state.educationBlockIds + 1,
-            data: [...this.state.data, this.createEmptyEducationData()]
-        })
-    }
-
-    createEmptyEducationData() {
+    const createEmptyEducationData = () => {
         return {
-            id: this.state.educationBlockIds,
+            id: blockIDs,
             school: '',
             major: '',
             graduated: ''
         }
     }
 
-    findDataIndex(newState, id) {
-        for (let i = 0; i < newState.length; i++) {
-            if (newState[i].id === id) {
+    const findDataIndex = (id) => {
+        for (let i = 0; i < data.length; i++) {
+            if (data[i].id === id) {
                 return i
             }
         }
     }
 
-    updateEducationData(id, category, newData) {
-        const stateUpdate = this.state.data
-        const updateIndex = this.findDataIndex(stateUpdate, id)
-        stateUpdate[updateIndex] = {
-            ...stateUpdate[updateIndex],
-            [category]: newData
+    const updateEducationData = (id, category, newInfo) => {
+        const updateIndex = findDataIndex(id)
+        const newData = [ ...data ]
+        newData[updateIndex] = {
+            ...newData[updateIndex],
+            [category]: newInfo
         }
-        this.setState({
-            data: stateUpdate
-        })
+        setData(newData)
     }
 
-    removeEducationBlock(id) {
-        const stateUpdate = this.state.data
-        const removeIndex = this.findDataIndex(stateUpdate, id)
-        stateUpdate.splice(removeIndex, 1)
-        this.setState({
-            data: stateUpdate
-        })
+    const removeEducationBlock = (id) => {
+        const removeIndex = findDataIndex(id)
+        const newData = [ ...data ]
+        newData.splice(removeIndex, 1)
+        setData(newData)
     }
 
-    render() {
-        const { edit } = this.props
-        const data = this.state.data
+    const collectDataAsElements = () => {
         let educationInfo = []
         for (let i = 0; i < data.length; i++) {
             const { id, school, major, graduated } = data[i]
@@ -71,29 +56,30 @@ class EducationInfo extends Component {
                 <EducationBlock
                     key = { i }
                     edit = { edit }
-                    delete = {this.removeEducationBlock}
-                    update = {this.updateEducationData}
+                    remove = { removeEducationBlock }
+                    update = { updateEducationData }
                     id = { id }
                     school = { school }
                     major = { major }
-                    graduated = { graduated }
+                    graduated = { graduated }                    
                 />
             )
         }
-
-        return( 
-			<div className = 'education-info'>
-                {educationInfo}
-                {edit && 
-                    <div className='add-education-wrapper'>
-                        <div className='add-education'>
-                            <Button task={this.addNewEducationBlock} label='Add Education' />
-                        </div>
-                    </div>
-                }
-            </div>
-        )
+        return educationInfo
     }
+
+    return (
+        <div className = 'education-info'>
+            {collectDataAsElements()}
+            {edit &&
+                <div className = 'add-education-wrapper'>
+                    <div className = 'add-education'>
+                        <Button task = { newEducationBlock } label = 'Add Education'/>
+                    </div>
+                </div>
+            }
+        </div>
+    )
 }
 
 EducationInfo.propTypes = {
